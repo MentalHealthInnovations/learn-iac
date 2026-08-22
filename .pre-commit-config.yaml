@@ -1,0 +1,35 @@
+# Hooks run on every commit, before the commit is made. A failing hook stops
+# the commit rather than warning about it afterwards.
+#
+# This is a cut-down version of what mhi-infra runs. The pieces left out
+# (tflint, trivy, terraform-docs, terraform_validate) either need an
+# initialised directory or produce output that is noise during a class.
+#
+# Install once, per clone:  pre-commit install
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-merge-conflict
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: detect-private-key
+      # Catches a .terraform directory or a state file that slipped past
+      # .gitignore, both of which are large enough to trip this first.
+      - id: check-added-large-files
+
+  # Rewrites .tf files to canonical layout. PCT_TFPATH in mise.toml points this
+  # at tofu rather than terraform.
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.108.1
+    hooks:
+      - id: terraform_fmt
+
+  # The backstop for the no-secrets rule. This repository is public, so a
+  # committed credential is a published credential.
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.1
+    hooks:
+      - id: gitleaks

@@ -39,6 +39,24 @@ git checkout reference -- 01-local
 
 The `reference` branch holds a completed copy of every step. Reach for it rather than falling behind, and come back to the step afterwards.
 
+## This repository is public
+
+Everything you write here, including your branch, your pull request and your commit messages, is readable by anyone. That is deliberate, and it is worth understanding before you type your first commit, because it is also true of the repository that runs our AWS estate.
+
+Two reasons for it. The first is that the discipline is the point: "could this be public?" is a sharper test than "is this tidy enough", and it is harder to let slip under pressure than a self-imposed rule. The second is that other charities get to read a real infrastructure repository rather than a sanitised template, and the working code is the hard part to get right. Both come from ADR-0005 in the infrastructure repository (`docs/adr/0005-open-source-the-repo.md`), which reached the same decision for the same reasons.
+
+Never commit, here or there:
+
+- Secrets of any kind. Keys, tokens, passwords, certificates, connection strings with credentials in them.
+- Service-user data. For a mental health organisation this is the absolute line.
+- Staff personal-life data. Personal email addresses, home addresses, HR records.
+- Internal references. Ticket keys, internal-only URLs, the names of internal tools and chat channels.
+- Real production bucket names, host names, and private addresses.
+
+Fine to commit: AWS account numbers, which AWS documents as identifying rather than secret, and staff work email addresses.
+
+A secret that a running system needs is supplied at the point it runs, from an identity the machine already holds or from a secret store it can read, so that the value never exists in a file at all. Step 09 shows what that looks like in practice.
+
 ## Rules of the room
 
 - Prefix every resource you create in AWS with your own name, so twelve people can share one account without colliding.

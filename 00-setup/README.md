@@ -39,7 +39,27 @@ mise trust
 mise install
 ```
 
-That installs Terraform, OpenTofu and Terragrunt at the versions in [mise.toml](../mise.toml). The first run downloads a few hundred megabytes.
+That installs Terraform, OpenTofu, Terragrunt and pre-commit at the versions in [mise.toml](../mise.toml). The first run downloads a few hundred megabytes.
+
+## 3a. Install the commit hooks
+
+```
+pre-commit install
+```
+
+This repository runs checks on every commit, listed in [.pre-commit-config.yaml](../.pre-commit-config.yaml). Two of them matter to you.
+
+`terraform_fmt` rewrites your `.tf` files to the standard layout. When it does, the commit stops and the rewritten file is sitting there unstaged, so you `git add` it again and commit a second time. That is the hook working, not an error.
+
+`gitleaks` looks for anything shaped like a credential and refuses the commit if it finds one. This repository is public, so a committed credential is a published credential, and the only reliable fix for one is to treat it as compromised and rotate it. The hook is there to make sure you never need to.
+
+Check they run:
+
+```
+pre-commit run --all-files
+```
+
+The first run downloads each hook's own environment and is slow. Later runs are quick.
 
 ## 4. Create the provider cache
 
@@ -64,11 +84,13 @@ Expect Terraform 1.5.7, OpenTofu 1.12.x and Terragrunt 1.1.3. A different versio
 Nothing before step 04 touches AWS, but a credential problem found on the day costs you the second half of the class, so find it now.
 
 ```
-export AWS_PROFILE=learn-iac
+export AWS_PROFILE=shared-services-dev-MHI_ReadWriteBasic
 aws sts get-caller-identity
 ```
 
 That prints an account number, a user id and an ARN carrying your name. An error, a hang, or a prompt for a password means something is wrong and needs sorting before the session.
+
+The profile name is the account followed by the permission set you hold in it. `MHI_ReadWriteBasic` is the rung that can create things in a development account and read state, and it is what the class needs. If you do not have it, say so now rather than on the day, because granting it is a pull request against another repository and a wait.
 
 If `aws` is not found, install the AWS Command Line Interface (CLI) with `brew install awscli`.
 
