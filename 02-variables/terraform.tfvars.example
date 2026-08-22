@@ -1,0 +1,7 @@
+# Copy this to terraform.tfvars and edit it. The copy is ignored by git.
+#
+#   cp terraform.tfvars.example terraform.tfvars
+
+pet_length   = 3
+greeting     = "Good morning"
+environments = ["dev", "staging", "prod"]
