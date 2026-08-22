@@ -1,0 +1,23 @@
+# Provider downloads and per-directory working data.
+.terraform/
+
+# Real repositories commit their lock file, and step 09 shows ours. It is
+# ignored here because a lock file written on one architecture fails `init` for
+# anyone on another, and this class runs on whatever machines turn up.
+.terraform.lock.hcl
+
+# State never belongs in git. Step 05 covers where it goes instead.
+*.tfstate
+*.tfstate.*
+.terraform.tfstate.lock.info
+
+# Variable files can carry secrets, so commit the example rather than the file.
+*.tfvars
+*.tfvars.json
+!*.tfvars.example
+
+# Written by step 01.
+generated/
+
+crash.log
+crash.*.log
