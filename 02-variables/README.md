@@ -5,7 +5,8 @@ Step 01 had every value written into the middle of the resource. That configurat
 Still no cloud account. Still the `random` and `local` providers.
 
 ```
-cd ~/learn-iac/02-variables
+mkdir -p ~/learn-iac/students/your-name/02-variables
+cd ~/learn-iac/students/your-name/02-variables
 ```
 
 ## 1. Start from step 01
@@ -147,7 +148,7 @@ Outputs are how one piece of infrastructure hands a value to a person, a script,
 terraform fmt
 terraform validate
 terraform destroy
-git add 02-variables
+git add ~/learn-iac/students/your-name/02-variables
 git commit -m "step 02: variables, outputs and for_each"
 ```
 

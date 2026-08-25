@@ -7,7 +7,8 @@ The idea behind Terraform is that you describe the end state you want, and it wo
 Your shell should be in `01-local` for the whole of this step.
 
 ```
-cd ~/learn-iac/01-local
+mkdir -p ~/learn-iac/students/your-name/01-local
+cd ~/learn-iac/students/your-name/01-local
 ```
 
 ## 1. Declare what you need
@@ -166,7 +167,7 @@ The file is gone, and `terraform.tfstate` is now empty of resources. Getting int
 ## 9. Commit
 
 ```
-git add 01-local
+git add ~/learn-iac/students/your-name/01-local
 git commit -m "step 01: first local resources"
 ```
 

@@ -5,7 +5,8 @@ Step 05 left you with three directories that were nearly identical, three comman
 Terragrunt is a thin wrapper. It is not a fork of OpenTofu and it does not replace the language. It generates files into a working copy of your configuration and then runs `tofu` against that copy. Everything you have learned still applies underneath.
 
 ```
-cd ~/learn-iac/06-terragrunt
+mkdir -p ~/learn-iac/students/your-name/06-terragrunt
+cd ~/learn-iac/students/your-name/06-terragrunt
 ```
 
 ## 1. One shared module, as before
@@ -189,7 +190,7 @@ Unchanged, deliberately: each environment still has its own state file, in `stat
 
 ```
 terragrunt run --all destroy
-git add 06-terragrunt
+git add ~/learn-iac/students/your-name/06-terragrunt
 git commit -m "step 06: terragrunt"
 ```
 

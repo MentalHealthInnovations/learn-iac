@@ -6,7 +6,7 @@ Nothing here touches a cloud account. Every step runs against your own filesyste
 
 The class also runs as an ordinary piece of engineering work. You take a branch, commit at each step, and raise a pull request at the end for review. That last part is [step 08](08-pull-request/) and is as much of the point as the rest.
 
-Pull requests target the cohort branch for your session rather than `main`, so that `main` stays as a clean starting point for the next group.
+Everyone works in `students/<their-name>/`, so a dozen pull requests against `main` touch no common file and every one of them can be merged. The numbered directories at the top of the repository hold the instructions and stay as they are.
 
 ## Before the session
 
@@ -37,10 +37,10 @@ Session two, from one directory to many.
 If a step defeats you, take the finished version and carry on:
 
 ```
-git checkout reference -- 01-local
+cp -r ~/learn-iac-reference/01-local ~/learn-iac/students/your-name/
 ```
 
-The `reference` branch holds a completed copy of every step. Reach for it rather than falling behind, and come back to the step afterwards.
+That reads from a second checkout of this repository on the `reference` branch, which [00-setup](00-setup/) has you create. Reach for it rather than falling behind, and come back to the step afterwards.
 
 ## This repository is public
 

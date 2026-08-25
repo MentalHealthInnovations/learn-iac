@@ -3,7 +3,8 @@
 This step is deliberately tedious. You will build the same thing three times, by copying it, and by the end you should be irritated. Step 06 removes the irritation. Doing it in that order matters, because Terragrunt looks like unnecessary machinery until you have felt what it takes away.
 
 ```
-cd ~/learn-iac/05-environments
+mkdir -p ~/learn-iac/students/your-name/05-environments
+cd ~/learn-iac/students/your-name/05-environments
 ```
 
 ## 1. First, the question from step 04
@@ -124,7 +125,7 @@ Leave the directories in place. Step 06 rebuilds this same layout without the du
 cd dev && tofu destroy && cd ..
 cd staging && tofu destroy && cd ..
 cd prod && tofu destroy && cd ..
-git add 05-environments
+git add ~/learn-iac/students/your-name/05-environments
 git commit -m "step 05: three environments by copy and paste"
 ```
 

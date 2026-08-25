@@ -3,7 +3,8 @@
 No new concepts. This step swaps one binary for another, on a configuration that already has state, and shows that nothing breaks. After it, you will not type `terraform` again for the rest of the class.
 
 ```
-cd ~/learn-iac/03-tofu
+mkdir -p ~/learn-iac/students/your-name/03-tofu
+cd ~/learn-iac/students/your-name/03-tofu
 ```
 
 ## 1. Why we are doing this
@@ -66,7 +67,7 @@ cat generated/prod.txt
 
 ```
 tofu destroy
-git add 03-tofu
+git add ~/learn-iac/students/your-name/03-tofu
 git commit -m "step 03: migrate to OpenTofu"
 ```
 

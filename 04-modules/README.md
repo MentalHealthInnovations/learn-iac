@@ -5,7 +5,8 @@ Step 02 produced three files from one resource block. That works while everythin
 From here on the binary is `tofu`.
 
 ```
-cd ~/learn-iac/04-modules
+mkdir -p ~/learn-iac/students/your-name/04-modules
+cd ~/learn-iac/students/your-name/04-modules
 ```
 
 ## 1. You have already written one
@@ -187,7 +188,7 @@ A `module` block takes `for_each`, so those two calls could collapse into one bl
 tofu fmt
 tofu validate
 tofu destroy
-git add 04-modules
+git add ~/learn-iac/students/your-name/04-modules
 git commit -m "step 04: modules"
 ```
 

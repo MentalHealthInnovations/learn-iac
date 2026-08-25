@@ -89,7 +89,33 @@ You work on your own branch for the whole class and raise a pull request from it
 git switch -c session/your-name
 ```
 
-Use your actual name, in lower case, with a hyphen between words. At the end of the class you raise a pull request from this branch, and it targets the cohort branch for your session rather than `main`.
+Use your actual name, in lower case, with a hyphen between words.
+
+## 7. Make your own working directory
+
+Everyone in the class works in a directory of their own, so that a dozen pull requests can be merged without any of them touching the same file.
+
+```
+mkdir -p students/your-name
+```
+
+Same name as your branch. Every step from here on works inside `students/your-name/`, and the paths in each step assume it.
+
+## 8. Add the reference branch alongside
+
+The `reference` branch holds a finished copy of every step. Rather than switching branches to look at it, check it out once into a directory of its own:
+
+```
+git worktree add ~/learn-iac-reference reference
+```
+
+That is a second working copy of the same repository, on a different branch, that you can read at any time without disturbing what you are doing. If a step defeats you, copy the finished version across and carry on:
+
+```
+cp -r ~/learn-iac-reference/01-local ~/learn-iac/students/your-name/
+```
+
+Reach for that rather than falling behind, and come back to the step afterwards.
 
 ## Done
 

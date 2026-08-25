@@ -23,14 +23,14 @@ git push -u origin HEAD
 
 ## 3. Write the description
 
-The base branch is the cohort branch, not `main`. Check it before you submit, because the default is usually wrong.
+The base branch is `main`. Everything you have added lives under `students/your-name/`, so your pull request touches no file anyone else's touches and can be merged without waiting for theirs.
 
 Title it the way the commits are titled: `type: description`, so `docs: worked through the class` or similar.
 
 For the body, three things are worth more than a summary of what you did, which the reviewer can see in the diff:
 
 - Where you got stuck, and what unstuck you.
-- Anything you copied from the `reference` branch rather than working out, and why.
+- Anything you copied from the reference checkout rather than working out, and why.
 - A question about something that worked but you did not understand.
 
 The third is the most valuable and the least often written. A pull request is a place to ask, not only a place to submit.
