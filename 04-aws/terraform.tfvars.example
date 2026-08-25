@@ -1,7 +1,0 @@
-# Copy this to terraform.tfvars and put your own name in it. The copy is
-# ignored by git.
-#
-#   cp terraform.tfvars.example terraform.tfvars
-
-name_prefix = "your-name"
-aws_region  = "eu-west-2"
