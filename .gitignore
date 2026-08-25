@@ -1,6 +1,10 @@
 # Provider downloads and per-directory working data.
 .terraform/
 
+# Terragrunt copies each unit's configuration here and generates into the copy,
+# so this is build output rather than source. Step 06 explains why that matters.
+.terragrunt-cache/
+
 # Real repositories commit their lock file, and step 09 shows ours. It is
 # ignored here because a lock file written on one architecture fails `init` for
 # anyone on another, and this class runs on whatever machines turn up.
