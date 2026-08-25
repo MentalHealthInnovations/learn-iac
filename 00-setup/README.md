@@ -89,7 +89,7 @@ You work on your own branch for the whole class and raise a pull request from it
 git switch -c session/your-name
 ```
 
-Use your actual name, in lower case, with a hyphen between words.
+Use your actual name, in lower case, with a hyphen between words. At the end of the class you raise a pull request from this branch, and it targets the cohort branch for your session rather than `main`.
 
 ## Done
 

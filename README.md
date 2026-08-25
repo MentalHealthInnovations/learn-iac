@@ -4,7 +4,9 @@ A hands-on class that starts with one file writing to your own disk and ends wit
 
 Nothing here touches a cloud account. Every step runs against your own filesystem, which means no credentials, no cost, no waiting on an API, and a `plan` that returns instantly. What you learn transfers unchanged: the language, the commands, the state file and the tooling are the same whether the thing on the other end is a text file or a database.
 
-The class also runs as an ordinary piece of engineering work. You take a branch, commit at each step, and raise a pull request at the end for review.
+The class also runs as an ordinary piece of engineering work. You take a branch, commit at each step, and raise a pull request at the end for review. That last part is [step 08](08-pull-request/) and is as much of the point as the rest.
+
+Pull requests target the cohort branch for your session rather than `main`, so that `main` stays as a clean starting point for the next group.
 
 ## Before the session
 
@@ -28,6 +30,7 @@ Session two, from one directory to many.
 | [05-environments](05-environments/) | Dev, staging and prod, by copy and paste | The duplication problem, felt rather than described |
 | [06-terragrunt](06-terragrunt/) | The same three, without the copy and paste | `terragrunt.hcl`, generated blocks, dependencies, `run --all` |
 | [07-mhi-infra](07-mhi-infra/) | Nothing. Read only. | How the real repository is laid out, and what a cloud provider adds |
+| [08-pull-request](08-pull-request/) | A reviewed pull request | Pushing, describing, responding to review, and why merging is the approval |
 
 ## Catching up
 
