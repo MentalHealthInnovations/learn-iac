@@ -129,7 +129,7 @@ inputs = {
 }
 ```
 
-The module it points at is in the reference branch as `modules/summary`, or write your own: it takes `pet_names` and `output_dir` and writes one file listing them.
+The module it points at is at `reference/06-terragrunt/modules/summary`, or write your own: it takes `pet_names` and `output_dir` and writes one file listing them.
 
 A `dependency` does two things at once. It reads another unit's outputs, and it declares an ordering. Nowhere do you write down that the environments come before the summary.
 

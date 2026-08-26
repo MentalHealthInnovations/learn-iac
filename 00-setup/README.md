@@ -101,21 +101,15 @@ mkdir -p students/your-name
 
 Same name as your branch. Every step from here on works inside `students/your-name/`, and the paths in each step assume it.
 
-## 8. Add the reference branch alongside
+## 8. Know where the answers are
 
-The `reference` branch holds a finished copy of every step. Rather than switching branches to look at it, check it out once into a directory of its own:
-
-```
-git worktree add ~/learn-iac-reference reference
-```
-
-That is a second working copy of the same repository, on a different branch, that you can read at any time without disturbing what you are doing. If a step defeats you, copy the finished version across and carry on:
+`reference/` holds a finished copy of every step. If a step defeats you, copy it across and carry on:
 
 ```
-cp -r ~/learn-iac-reference/01-local ~/learn-iac/students/your-name/
+cp -r ~/learn-iac/reference/01-local ~/learn-iac/students/your-name/
 ```
 
-Reach for that rather than falling behind, and come back to the step afterwards.
+Reach for that rather than falling behind, and come back to the step afterwards. Nobody is marking this.
 
 ## Done
 

@@ -37,10 +37,10 @@ Session two, from one directory to many.
 If a step defeats you, take the finished version and carry on:
 
 ```
-cp -r ~/learn-iac-reference/01-local ~/learn-iac/students/your-name/
+cp -r ~/learn-iac/reference/01-local ~/learn-iac/students/your-name/
 ```
 
-That reads from a second checkout of this repository on the `reference` branch, which [00-setup](00-setup/) has you create. Reach for it rather than falling behind, and come back to the step afterwards.
+[reference/](reference/) holds a finished copy of every step. Reach for it rather than falling behind, and come back to the step afterwards.
 
 ## This repository is public
 
