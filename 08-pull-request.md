@@ -20,11 +20,21 @@ The three dots in `main...HEAD` mean "everything on my branch that is not on mai
 
 ## 2. Push your branch
 
+You cloned over HTTPS, which needs no SSH key but does need GitHub credentials before it will accept a push. The GitHub CLI is the shortest way to arrange that:
+
+```
+gh auth login
+```
+
+Choose HTTPS as the protocol and answer yes when it offers to authenticate Git with your GitHub credentials, which is what stores them for later pushes ([GitHub's caching-credentials docs](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git)). Git Credential Manager does the same job if you already have it.
+
 ```
 git push -u origin HEAD
 ```
 
 `-u` sets the upstream, so from now on plain `git push` knows where to go. Git prints a link to open a pull request. Follow it.
+
+If the push is rejected because you have no write access, fork the repository, add your fork as a second remote, and push there instead. The pull request then comes from your fork, and everything below reads the same.
 
 ## 3. Write the description
 

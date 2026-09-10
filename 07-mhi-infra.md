@@ -4,8 +4,10 @@ Everything you have built so far writes text files. This step opens the reposito
 
 Nothing here is applied, planned, or destroyed. You read.
 
+That repository is private, so this step needs an MHI account with access to it. If the clone asks for credentials, `gh auth login` is the shortest way to supply them, as [step 08](08-pull-request.md) describes.
+
 ```
-git clone git@github.com:MentalHealthInnovations/mhi-infra.git ~/mhi-infra
+git clone https://github.com/MentalHealthInnovations/mhi-infra.git ~/mhi-infra
 cd ~/mhi-infra
 ```
 
