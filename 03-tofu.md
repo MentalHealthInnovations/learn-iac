@@ -9,7 +9,7 @@ cd ~/learn-iac/workspaces/$WORKSPACE
 
 ## 1. Why we are doing this
 
-State encryption. A state file records every attribute of everything you built, including the values a provider marked sensitive, so it is the most valuable file in the repository to an attacker. OpenTofu encrypts it client-side, before it is written anywhere, and the feature is part of the free tool rather than a paid tier ([OpenTofu state encryption docs](https://opentofu.org/docs/language/state/encryption/)). Our infrastructure repository turns that on for every unit, which you will see generated in [step 07](../07-mhi-infra/).
+State encryption. A state file records every attribute of everything you built, including the values a provider marked sensitive, so it is the most valuable file in the repository to an attacker. OpenTofu encrypts it client-side, before it is written anywhere, and the feature is part of the free tool rather than a paid tier ([OpenTofu state encryption docs](https://opentofu.org/docs/language/state/encryption/)). Our infrastructure repository turns that on for every unit, which you will see generated in [step 07](07-mhi-infra.md).
 
 That matters because our state lives in an S3 bucket. Bucket-level encryption protects it from someone reading the disk, and does nothing about someone who can read the bucket. Client-side encryption means the object is ciphertext to anyone holding bucket access alone.
 
@@ -32,7 +32,7 @@ rm .terraform.lock.hcl
 tofu init
 ```
 
-The lock file has to go first because it records which registry each provider came from, and Terraform resolved them against `registry.terraform.io`. OpenTofu uses `registry.opentofu.org`, which carries the same providers under the same names. `tofu init` writes a new lock file pointing at the registry it actually uses.
+The lock file has to go first because it records which registry each provider came from, and Terraform resolved them against `registry.terraform.io`. OpenTofu uses `registry.opentofu.org`, which carries the same providers under the same names. `tofu init` writes a new lock file pointing at the registry it uses.
 
 Read what `init` prints rather than skipping past it.
 
@@ -83,7 +83,7 @@ Every command you have learned keeps its name. `tofu init`, `tofu plan`, `tofu a
 
 Two things to remember for later:
 
-- Terragrunt calls a binary underneath it, and by default that binary is `terraform`. [mise.toml](../mise.toml) sets `TG_TF_PATH=tofu` for this repository so that it calls OpenTofu instead. [Step 06](../06-terragrunt/) is where that starts to matter.
+- Terragrunt calls a binary underneath it, and by default that binary is `terraform`. [mise.toml](mise.toml) sets `TG_TF_PATH=tofu` for this repository so that it calls OpenTofu instead. [Step 06](06-terragrunt.md) is where that starts to matter.
 - Provider source addresses in `required_providers` still read `hashicorp/random`. That is the name of the provider, not a statement about which registry serves it.
 
 ## If you have time

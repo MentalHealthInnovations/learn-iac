@@ -1,4 +1,4 @@
-# Toolchain for the Infrastructure as Code course.
+# Toolchain for learn-iac.
 #
 # Install everything with:  mise install
 # Activate per shell with:  eval "$(mise activate zsh)"

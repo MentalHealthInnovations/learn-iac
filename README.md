@@ -1,31 +1,29 @@
 # Infrastructure as Code, from scratch
 
-A hands-on course that starts with one file writing to your own disk and ends with a tour of the repository that runs our AWS estate. Everything is typed in your own terminal.
+Build one Terraform configuration up from a single file, then rebuild it with OpenTofu and Terragrunt.
 
-Every step runs against your own filesystem rather than a cloud account, so there are no credentials to arrange, nothing to pay for, and a `plan` that returns instantly. What you learn transfers unchanged: the language, the commands, the state file and the tooling are the same whether the thing on the other end is a text file or a database.
+Everything runs on your own filesystem, so there is no cloud account and nothing to pay for. The language, the commands and the state file do not care whether they are creating a text file or a database.
 
-The course also runs as an ordinary piece of engineering work. You take a branch, commit at each step, and raise a pull request at the end for review. That last part is [step 08](08-pull-request/) and is as much of the point as the rest.
+Take the steps in order. Each one edits, extracts or replaces what the last left behind, so a step you skip takes the next one's starting point with it.
 
-Everyone works in a directory of their own under `workspaces/`, so a dozen pull requests against `main` touch no common file and every one of them can be merged. The numbered directories at the top of the repository hold the instructions and stay as they are.
-
-You build one configuration across steps 01 to 06 rather than a fresh copy per step, so each step edits, extracts or replaces what the one before it left. The diff a reviewer reads is then a sequence of refactors, which is what this work looks like in practice.
+You work in `workspaces/your-name/`, on your own branch, and raise a pull request at the end. That is [step 08](08-pull-request.md), and it is as much of the point as the rest. Nobody's directory touches anyone else's, so a dozen pull requests against `main` can all be merged.
 
 ## Start here
 
-Work through [00-setup](00-setup/) first. It installs the tools and gives you a branch and a directory to work in.
+Work through [00-setup](00-setup.md) first. It installs the tools and gives you a branch and a directory to work in.
 
 ## The steps
 
 | Step | What you build | What it teaches |
 | --- | --- | --- |
-| [01-local](01-local/) | A random name and a text file on your disk | `init`, `plan`, `apply`, `destroy`, and what state is |
-| [02-variables](02-variables/) | The same thing, parameterised, three files instead of one | Variables, outputs, locals, `for_each` |
-| [03-tofu](03-tofu/) | Nothing new | Why we run OpenTofu, and moving a state file across |
-| [04-modules](04-modules/) | The same resources, extracted into a module and called twice | Modules, inputs, outputs, composition |
-| [05-environments](05-environments/) | Dev, staging and prod, by copy and paste | The duplication problem, felt rather than described |
-| [06-terragrunt](06-terragrunt/) | The same three, without the copy and paste | `terragrunt.hcl`, generated blocks, dependencies, `run --all` |
-| [07-mhi-infra](07-mhi-infra/) | Nothing. Read only. | How the real repository is laid out, and what a cloud provider adds |
-| [08-pull-request](08-pull-request/) | A reviewed pull request | Pushing, describing, responding to review, and why merging is the approval |
+| [01-local](01-local.md) | A random name and a text file on your disk | `init`, `plan`, `apply`, `destroy`, and what state is |
+| [02-variables](02-variables.md) | The same thing, parameterised, three files instead of one | Variables, outputs, locals, `for_each` |
+| [03-tofu](03-tofu.md) | Nothing new | Why we run OpenTofu, and moving a state file across |
+| [04-modules](04-modules.md) | The same resources, extracted into a module and called twice | Modules, inputs, outputs, composition |
+| [05-environments](05-environments.md) | Dev, staging and prod, by copy and paste | The duplication problem, felt rather than described |
+| [06-terragrunt](06-terragrunt.md) | The same three, without the copy and paste | `terragrunt.hcl`, generated blocks, dependencies, `run --all` |
+| [07-mhi-infra](07-mhi-infra.md) | Nothing. Read only. | How the real repository is laid out, and what a cloud provider adds |
+| [08-pull-request](08-pull-request.md) | A reviewed pull request | Pushing, describing, responding to review, and why merging is the approval |
 
 ## Catching up
 
@@ -36,9 +34,9 @@ WORKSPACE=your-name
 cp -r ~/learn-iac/reference/04-modules/. ~/learn-iac/workspaces/$WORKSPACE/
 ```
 
-The trailing `/.` copies the contents rather than the directory. Delete anything the step was supposed to remove, because copying files in cannot take files out. Step 03 has no snapshot of its own, since it changes which binary you run and leaves every file alone.
+The trailing `/.` copies the contents rather than the directory. Delete anything the step was supposed to remove, because copying files in cannot take files out. Step 03 has no snapshot, since it changes which binary you run and leaves every file alone.
 
-Reach for this rather than falling behind, and come back to the step afterwards.
+Come back to the step afterwards.
 
 ## This repository is public
 
@@ -56,10 +54,10 @@ Never commit, here or there:
 
 Fine to commit: AWS account numbers, which AWS documents as identifying rather than secret, and staff work email addresses.
 
-A secret that a running system needs is supplied at the point it runs, from an identity the machine already holds or from a secret store it can read, so that the value never exists in a file at all. [Step 07](07-mhi-infra/) shows what that looks like in practice.
+A secret that a running system needs is supplied at the point it runs, from an identity the machine already holds or from a secret store it can read, so that the value never exists in a file at all. [Step 07](07-mhi-infra.md) shows what that looks like in practice.
 
 ## How to work through it
 
 - Run `destroy` at the end of any step that created something, so the next step starts from nothing.
 - Ask the moment you are stuck. Each step builds on the one before it, so a step you did not finish blocks the rest.
-- Read the plan output rather than scrolling past it. Most of the course is learning to read a plan.
+- Read the plan output rather than scrolling past it. Most of this is learning to read a plan.

@@ -34,7 +34,7 @@ inputs = {
 
 This is the answer to the problem step 05 ended on. A backend block accepts no variables, so it cannot be written once and parameterised. Terragrunt sidesteps that by writing the block itself, per unit, with the values filled in.
 
-`path_relative_to_include()` returns where the unit sits relative to this file, so `dev` gets `state/dev/terraform.tfstate` and nothing has to be spelled out per environment. In our infrastructure repository the same block says `backend = "s3"` and computes a bucket and key the same way. [Step 07](../07-mhi-infra/) shows it.
+`path_relative_to_include()` returns where the unit sits relative to this file, so `dev` gets `state/dev/terraform.tfstate` and nothing has to be spelled out per environment. In our infrastructure repository the same block says `backend = "s3"` and computes a bucket and key the same way. [Step 07](07-mhi-infra.md) shows it.
 
 ## 2. Replace each environment with four lines
 
@@ -72,7 +72,7 @@ inputs = {
 }
 ```
 
-Compare that against the file you just deleted, which is kept at [reference/05-environments/prod/main.tf](../reference/05-environments/prod/main.tf). The same three values, and nothing else.
+Compare that against the file you just deleted, which is kept at [reference/05-environments/prod/main.tf](reference/05-environments/prod/main.tf). The same three values, and nothing else.
 
 ## 3. Apply one, and go looking for the generated file
 

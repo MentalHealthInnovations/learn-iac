@@ -13,7 +13,7 @@ A `module` block takes `for_each`. So the obvious way to build three environment
 
 Because it puts all three environments in one state file, and one state file is one blast radius. With `for_each`, you cannot plan dev without also refreshing prod, you cannot apply dev without prod being in the same run, and a mistake in a shared input shows up as a change to all three at once. The thing you most want, that a bad afternoon in dev cannot reach production, is exactly what a shared state file gives away.
 
-So environments get separate state. Separate state means separate directories, one `tofu` run each. That is the constraint everything below follows from, and it is why the tedium is not simply bad design.
+So environments get separate state. Separate state means separate directories, one `tofu` run each. That is the constraint everything below follows from, and it is why the tedium is not bad design.
 
 `for_each` over a module is still the right answer within one environment, for three of the same thing that live and die together. It is the wrong answer across environments.
 

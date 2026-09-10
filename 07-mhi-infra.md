@@ -94,7 +94,7 @@ Read the comment explaining why the mock value is a self-describing string rathe
 
 ## What you have not seen
 
-Everything so far stayed on your filesystem. What changes when the thing on the other end is a cloud provider:
+Everything so far stayed on your filesystem. What changes when the target is a cloud provider:
 
 **Plans take time and can be wrong about the past.** Every resource is refreshed against a live API, so a plan is slow and it can show you changes nobody made in code. That gap is called drift, and it is most of what a plan is for.
 
@@ -104,7 +104,7 @@ Everything so far stayed on your filesystem. What changes when the thing on the 
 
 **Nobody applies from a laptop.** A pull request runs a plan in CI. Merging is the approval, and the merge triggers the apply. The permission sets are arranged so that most people can run a plan and cannot write state, which enforces it rather than relying on everyone remembering.
 
-**Everything is written to be published.** The rules in [the top-level README](../README.md) come from this repository, and they are why the bucket module takes a prefix and lets AWS generate the real name, and why access bindings live in an encrypted file.
+**Everything is written to be published.** The rules in [the top-level README](README.md) come from this repository, and they are why the bucket module takes a prefix and lets AWS generate the real name, and why access bindings live in an encrypted file.
 
 ## Where to go next
 

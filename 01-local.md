@@ -2,9 +2,7 @@
 
 The idea behind Terraform is that you describe the end state you want, and it works out which calls to make to get there. You never write "create this, then that". You write what should exist, and it compares that against what already exists.
 
-Everything this step creates lands on your own disk, where you can look at it.
-
-Your workspace is the directory you made in step 00, and every step from here builds on what the one before it left there.
+Work in the directory you made in step 00.
 
 ```
 WORKSPACE=your-name
@@ -42,7 +40,7 @@ Look at what appeared:
 ls -a
 ```
 
-`.terraform/` holds the downloaded plugin. `.terraform.lock.hcl` records the exact version and checksum that were chosen, so that the next person to run `init` gets the same plugin rather than whatever is newest. Both are ignored by git in this repository, explained in [.gitignore](../.gitignore).
+`.terraform/` holds the downloaded plugin. `.terraform.lock.hcl` records the exact version and checksum that were chosen, so that the next person to run `init` gets the same plugin rather than whatever is newest. Both are ignored by git in this repository, explained in [.gitignore](.gitignore).
 
 You will need to run `init` every time you add or change a provider.
 
@@ -82,7 +80,7 @@ This is the point of the whole step. Terraform has no memory beyond this file. I
 Two things follow from that, and both come up again later:
 
 - Lose the file and Terraform forgets it made anything. It will happily create a second copy of everything.
-- Two people running against the same infrastructure need the same file, which is why a state file on your laptop stops working the moment anyone else joins. [Step 07](../07-mhi-infra/) shows where it goes instead.
+- Two people running against the same infrastructure need the same file, which is why a state file on your laptop stops working the moment anyone else joins. [Step 07](07-mhi-infra.md) shows where it goes instead.
 
 ## 5. Add something that depends on it
 
@@ -148,7 +146,7 @@ terraform fmt
 terraform validate
 ```
 
-`fmt` rewrites the file to the standard layout, and `validate` checks that it makes sense without contacting anything. Both are worth running before every commit, and [step 07](../07-mhi-infra/) shows the repository that enforces them automatically.
+`fmt` rewrites the file to the standard layout, and `validate` checks that it makes sense without contacting anything. Both are worth running before every commit, and [step 07](07-mhi-infra.md) shows the repository that enforces them automatically.
 
 ## 8. Destroy
 
@@ -162,7 +160,7 @@ Type `yes`. Then check:
 ls generated/
 ```
 
-The file is gone, and `terraform.tfstate` is now empty of resources. Destroying at the end of a step leaves the next one a clean slate, and it is the habit that stops things being left running once the thing on the other end costs money.
+The file is gone, and `terraform.tfstate` is now empty of resources. Destroying at the end of a step leaves the next one a clean slate, and it is the habit that stops resources being left running once they cost money.
 
 Leave the `.tf` files where they are. The next step edits them.
 

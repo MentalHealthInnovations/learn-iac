@@ -30,7 +30,7 @@ git push -u origin HEAD
 
 The base branch is `main`. Everything you have added lives under `workspaces/$WORKSPACE/`, so your pull request touches no file anyone else's touches and can be merged without waiting for theirs.
 
-Title it the way the commits are titled: `type: description`, so `docs: worked through the course` or similar.
+Title it the way the commits are titled: `type: description`, so `docs: worked through the steps` or similar.
 
 For the body, three things are worth more than a summary of what you did, which the reviewer can see in the diff:
 

@@ -16,14 +16,13 @@ Then hook it into your shell, once:
 
 ```
 echo 'eval "$(mise activate zsh)"' >> ~/.zshrc
+source ~/.zshrc
 ```
-
-Open a new terminal window. Everything below assumes that new window.
 
 ## 2. Clone the repository
 
 ```
-git clone git@github.com:MentalHealthInnovations/learn-iac.git ~/learn-iac
+git clone https://github.com/MentalHealthInnovations/learn-iac.git ~/learn-iac
 ```
 
 The rest of this page assumes your shell is in `~/learn-iac`.
@@ -38,9 +37,9 @@ mise install
 mkdir -p ~/.terraform.d/plugin-cache
 ```
 
-That installs Terraform, OpenTofu, Terragrunt and pre-commit at the versions in [mise.toml](../mise.toml). The first run downloads a few hundred megabytes.
+That installs Terraform, OpenTofu, Terragrunt and pre-commit at the versions in [mise.toml](mise.toml). The first run downloads a few hundred megabytes.
 
-The last line creates the shared provider download cache that [mise.toml](../mise.toml) points `TF_PLUGIN_CACHE_DIR` at. Every step downloads providers into that one directory rather than its own, which makes each `init` after the first one quick. OpenTofu will not create the directory itself ([OpenTofu CLI configuration docs](https://opentofu.org/docs/cli/config/config-file/)), so it has to exist before the first `init`.
+The last line creates the shared provider download cache that [mise.toml](mise.toml) points `TF_PLUGIN_CACHE_DIR` at. Every step downloads providers into that one directory rather than its own, which makes each `init` after the first one quick. OpenTofu will not create the directory itself ([OpenTofu CLI configuration docs](https://opentofu.org/docs/cli/config/config-file/)), so it has to exist before the first `init`.
 
 ## 4. Install the commit hooks
 
@@ -48,7 +47,7 @@ The last line creates the shared provider download cache that [mise.toml](../mis
 pre-commit install
 ```
 
-This repository runs checks on every commit, listed in [.pre-commit-config.yaml](../.pre-commit-config.yaml). Two of them matter to you.
+This repository runs checks on every commit, listed in [.pre-commit-config.yaml](.pre-commit-config.yaml). Two of them matter to you.
 
 `terraform_fmt` rewrites your `.tf` files to the standard layout. When it does, the commit stops and the rewritten file is sitting there unstaged, so you `git add` it again and commit a second time. That is the hook working, not an error.
 
@@ -85,4 +84,4 @@ Every step from here on works inside `workspaces/$WORKSPACE/`, and each one open
 
 ## Done
 
-Move on to [01-local](../01-local/).
+Move on to [01-local](01-local.md).

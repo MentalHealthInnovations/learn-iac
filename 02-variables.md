@@ -61,7 +61,7 @@ greeting   = "Good morning"
 terraform plan
 ```
 
-`terraform.tfvars` is picked up automatically, with no flag naming it. It is also ignored by git in this repository, because a variables file is where credentials end up when nobody is paying attention. The convention that goes with that is committing a `terraform.tfvars.example` alongside it, so the next person can see which variables the file is expected to set without the values being in the repository. There is one in [reference/02-variables](../reference/02-variables/).
+`terraform.tfvars` is picked up automatically, with no flag naming it. It is also ignored by git in this repository, because a variables file is where credentials end up when nobody is paying attention. The convention that goes with that is committing a `terraform.tfvars.example` alongside it, so the next person can see which variables the file is expected to set without the values being in the repository. There is one in [reference/02-variables](reference/02-variables/).
 
 ## 3. A local is not a variable
 
@@ -136,7 +136,7 @@ terraform output
 terraform output -raw pet_name
 ```
 
-Outputs are how one piece of infrastructure hands a value to a person, a script, or another configuration. The last of those matters from [step 04](../04-modules/) onwards, when a module needs to tell its caller what it built.
+Outputs are how one piece of infrastructure hands a value to a person, a script, or another configuration. The last of those matters from [step 04](04-modules.md) onwards, when a module needs to tell its caller what it built.
 
 ## 6. Tidy and commit
 
