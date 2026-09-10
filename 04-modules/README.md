@@ -2,16 +2,16 @@
 
 Step 02 produced three files from one resource block. That works while everything is the same shape. A module is what you reach for when you want the same *pattern* several times, with different values, and you want to change the pattern in one place.
 
-From here on the binary is `tofu`.
+This step refactors what you have: the resources move out into a module, and what is left behind calls it twice. From here on the binary is `tofu`.
 
 ```
-mkdir -p ~/learn-iac/students/your-name/04-modules
-cd ~/learn-iac/students/your-name/04-modules
+WORKSPACE=your-name
+cd ~/learn-iac/workspaces/$WORKSPACE
 ```
 
 ## 1. You have already written one
 
-A module is a directory containing `.tf` files. That is the entire definition. The directory you worked in for steps 01 to 03 is a module, called the root module, and the only thing that makes it special is that it is the one you ran `tofu` in.
+A module is a directory containing `.tf` files. That is the entire definition. The directory you have been working in is a module, called the root module, and the only thing that makes it special is that it is the one you ran `tofu` in.
 
 So nothing below is new syntax. It is the same files, in a subdirectory, called by name.
 
@@ -76,7 +76,7 @@ terraform {
 }
 ```
 
-A module declares which providers it needs. It does not configure them, and it must not contain a `provider` block. Configuration belongs to the root, so that one provider setup serves every module underneath it. Step 07 shows what goes wrong when a module carries its own.
+A module declares which providers it needs. It does not configure them, and it must not contain a `provider` block. Configuration belongs to the root, so that one provider setup serves every module underneath it.
 
 ## 3. The boundary is the point
 
@@ -98,7 +98,7 @@ output "file_path" {
 
 ## 4. Call it
 
-Create `main.tf` in `04-modules` itself:
+The root no longer holds resources of its own. Replace the whole of `main.tf` with:
 
 ```hcl
 terraform {
@@ -131,6 +131,8 @@ module "prod" {
 }
 ```
 
+Then delete `variables.tf` and `outputs.tf`. Their contents now live in the module, and the two `module` blocks supply the values directly.
+
 Two calls, one pattern. `dev` takes the defaults for `greeting` and `pet_length`, `prod` overrides both.
 
 ```
@@ -157,7 +159,7 @@ Every address is now prefixed: `module.dev.random_pet.this`, `module.prod.local_
 
 `tofu output` shows nothing, even though the module defines two outputs. A module's outputs are visible to its caller, and stop there. To surface them, the root has to re-export them.
 
-Create `outputs.tf`:
+Create `outputs.tf` again, this time reaching into the modules:
 
 ```hcl
 output "dev_pet" {
@@ -188,9 +190,11 @@ A `module` block takes `for_each`, so those two calls could collapse into one bl
 tofu fmt
 tofu validate
 tofu destroy
-git add ~/learn-iac/students/your-name/04-modules
+git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 04: modules"
 ```
+
+Look at that diff before you commit it. Resources left the root and arrived in `modules/greeting`, which is what a refactor looks like in a repository like this one.
 
 ## If you have time
 

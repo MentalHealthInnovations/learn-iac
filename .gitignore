@@ -5,12 +5,12 @@
 # so this is build output rather than source. Step 06 explains why that matters.
 .terragrunt-cache/
 
-# Real repositories commit their lock file, and step 09 shows ours. It is
+# Real repositories commit their lock file, and step 07 shows ours. It is
 # ignored here because a lock file written on one architecture fails `init` for
-# anyone on another, and this class runs on whatever machines turn up.
+# anyone on another, and this runs on whatever machines turn up.
 .terraform.lock.hcl
 
-# State never belongs in git. Step 05 covers where it goes instead.
+# State never belongs in git. Step 07 covers where it goes instead.
 *.tfstate
 *.tfstate.*
 .terraform.tfstate.lock.info

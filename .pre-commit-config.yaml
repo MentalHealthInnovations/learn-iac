@@ -3,7 +3,7 @@
 #
 # This is a cut-down version of what mhi-infra runs. The pieces left out
 # (tflint, trivy, terraform-docs, terraform_validate) either need an
-# initialised directory or produce output that is noise during a class.
+# initialised directory or produce output that is noise while learning.
 #
 # Install once, per clone:  pre-commit install
 

@@ -3,8 +3,8 @@
 This step is deliberately tedious. You will build the same thing three times, by copying it, and by the end you should be irritated. Step 06 removes the irritation. Doing it in that order matters, because Terragrunt looks like unnecessary machinery until you have felt what it takes away.
 
 ```
-mkdir -p ~/learn-iac/students/your-name/05-environments
-cd ~/learn-iac/students/your-name/05-environments
+WORKSPACE=your-name
+cd ~/learn-iac/workspaces/$WORKSPACE
 ```
 
 ## 1. First, the question from step 04
@@ -17,13 +17,15 @@ So environments get separate state. Separate state means separate directories, o
 
 `for_each` over a module is still the right answer within one environment, for three of the same thing that live and die together. It is the wrong answer across environments.
 
-## 2. Set up the shared module
+## 2. Clear the root
 
-One copy of the pattern, shared by all three environments:
+Your root calls the module twice. Three environments cannot live in one root, so the root stops being a place where anything runs:
 
 ```
-cp -r ../04-modules/modules .
+rm main.tf outputs.tf
 ```
+
+`modules/greeting` stays exactly where it is. One copy of the pattern, shared by all three environments.
 
 ## 3. Build dev
 
@@ -62,10 +64,8 @@ output "pet_name" {
 ```
 
 ```
-cd dev
-tofu init
-tofu apply
-cd ..
+tofu -chdir=dev init
+tofu -chdir=dev apply
 ```
 
 ## 4. Build staging and prod
@@ -84,8 +84,10 @@ The removals matter. Copying a directory that has been applied copies its state 
 Now edit `staging/main.tf`, changing `environment` to `"staging"`. Then `prod/main.tf`, changing `environment` to `"prod"`, `greeting` to `"Good morning"` and `pet_length` to `3`.
 
 ```
-cd staging && tofu init && tofu apply && cd ..
-cd prod && tofu init && tofu apply && cd ..
+tofu -chdir=staging init
+tofu -chdir=staging apply
+tofu -chdir=prod init
+tofu -chdir=prod apply
 ```
 
 ## 5. Count what you just duplicated
@@ -119,15 +121,15 @@ There is no way to do it except visiting each directory in turn. Miss one and yo
 
 ## 8. Tidy up
 
-Leave the directories in place. Step 06 rebuilds this same layout without the duplication, and you will want to compare.
-
 ```
-cd dev && tofu destroy && cd ..
-cd staging && tofu destroy && cd ..
-cd prod && tofu destroy && cd ..
-git add ~/learn-iac/students/your-name/05-environments
+tofu -chdir=dev destroy
+tofu -chdir=staging destroy
+tofu -chdir=prod destroy
+git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 05: three environments by copy and paste"
 ```
+
+Leave the directories in place. Step 06 rebuilds this same layout without the duplication.
 
 ## What to carry into step 06
 

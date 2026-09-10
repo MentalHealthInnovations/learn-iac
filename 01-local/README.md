@@ -1,14 +1,14 @@
 # 01. Your first Terraform
 
-Nothing in this step touches a cloud account or the network beyond downloading two small plugins. Everything it creates lands on your own disk, where you can look at it.
-
 The idea behind Terraform is that you describe the end state you want, and it works out which calls to make to get there. You never write "create this, then that". You write what should exist, and it compares that against what already exists.
 
-Your shell should be in `01-local` for the whole of this step.
+Everything this step creates lands on your own disk, where you can look at it.
+
+Your workspace is the directory you made in step 00, and every step from here builds on what the one before it left there.
 
 ```
-mkdir -p ~/learn-iac/students/your-name/01-local
-cd ~/learn-iac/students/your-name/01-local
+WORKSPACE=your-name
+cd ~/learn-iac/workspaces/$WORKSPACE
 ```
 
 ## 1. Declare what you need
@@ -26,7 +26,7 @@ terraform {
 }
 ```
 
-A provider is a plugin that knows how to talk to one system. There is one for AWS, one for GitHub, one for Cloudflare, and a few that talk to nothing at all. `random` is one of those, which is why we can start here without credentials.
+A provider is a plugin that knows how to talk to one system. There is one for AWS, one for GitHub, one for Cloudflare, and a few that talk to nothing outside your machine. `random` is one of those, which is why we can start here without arranging an account first.
 
 `~> 3.6` means any 3.x from 3.6 upwards, but not 4.0. Providers make breaking changes at major versions, so nobody floats free.
 
@@ -42,9 +42,9 @@ Look at what appeared:
 ls -a
 ```
 
-`.terraform/` holds the downloaded plugin. `.terraform.lock.hcl` records the exact version and checksum that were chosen, so that the next person to run `init` gets the same plugin rather than whatever is newest. Both are ignored by git in this repository, for reasons the comments in [.gitignore](../.gitignore) explain.
+`.terraform/` holds the downloaded plugin. `.terraform.lock.hcl` records the exact version and checksum that were chosen, so that the next person to run `init` gets the same plugin rather than whatever is newest. Both are ignored by git in this repository, explained in [.gitignore](../.gitignore).
 
-You will run `init` again every time you add a provider or change where state is kept.
+You will need to run `init` every time you add or change a provider.
 
 ## 3. Add a resource
 
@@ -82,7 +82,7 @@ This is the point of the whole step. Terraform has no memory beyond this file. I
 Two things follow from that, and both come up again later:
 
 - Lose the file and Terraform forgets it made anything. It will happily create a second copy of everything.
-- Two people running against the same infrastructure need the same file, which is why a state file on your laptop stops working the moment anyone else joins. Step 05 fixes that.
+- Two people running against the same infrastructure need the same file, which is why a state file on your laptop stops working the moment anyone else joins. [Step 07](../07-mhi-infra/) shows where it goes instead.
 
 ## 5. Add something that depends on it
 
@@ -148,7 +148,7 @@ terraform fmt
 terraform validate
 ```
 
-`fmt` rewrites the file to the standard layout, and `validate` checks that it makes sense without contacting anything. Both are worth running before every commit, and step 09 shows the repository that enforces them automatically.
+`fmt` rewrites the file to the standard layout, and `validate` checks that it makes sense without contacting anything. Both are worth running before every commit, and [step 07](../07-mhi-infra/) shows the repository that enforces them automatically.
 
 ## 8. Destroy
 
@@ -162,12 +162,14 @@ Type `yes`. Then check:
 ls generated/
 ```
 
-The file is gone, and `terraform.tfstate` is now empty of resources. Getting into the habit here is what stops you leaving things running in AWS from step 04 onwards.
+The file is gone, and `terraform.tfstate` is now empty of resources. Destroying at the end of a step leaves the next one a clean slate, and it is the habit that stops things being left running once the thing on the other end costs money.
+
+Leave the `.tf` files where they are. The next step edits them.
 
 ## 9. Commit
 
 ```
-git add ~/learn-iac/students/your-name/01-local
+git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 01: first local resources"
 ```
 

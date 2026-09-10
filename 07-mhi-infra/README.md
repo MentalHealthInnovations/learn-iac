@@ -9,6 +9,8 @@ git clone git@github.com:MentalHealthInnovations/mhi-infra.git ~/mhi-infra
 cd ~/mhi-infra
 ```
 
+That repository changes independently of this one. If a file named below has moved, list the directory above it and open its neighbour instead, because every stop is about a shape rather than a particular file.
+
 ## Stop 1: the shape
 
 ```
@@ -53,9 +55,9 @@ grep -n 'generate "' iac/root.hcl
 grep -n 'remote_state' iac/root.hcl
 ```
 
-In step 04 you wrote a `required_providers` block in your root module, and in step 06 Terragrunt generated one for you. Here the same mechanism supplies three things to every unit in the repository: the provider configuration, the backend configuration, and a client-side state encryption block.
+In step 04 you wrote a `required_providers` block in your root module, and in step 06 Terragrunt generated one for you. Here the same mechanism supplies three things to every unit in the repository: the provider configuration, the backend configuration, and the client-side state encryption block that step 03 said was the reason we run OpenTofu.
 
-Look at the `remote_state` block. It is the shape you used in step 06, with `backend = "s3"` instead of `backend = "local"`, and the bucket and key computed from where the unit sits in the tree. Two hundred directories, one definition.
+Look at the `remote_state` block. It is the shape you used in step 06, with `backend = "s3"` instead of `backend = "local"`, and the bucket and key computed from where the unit sits in the tree. Every unit in the repository, one definition.
 
 **Question:** if the backend configuration is generated, what happens to a `backend.tf` file that someone writes by hand in a unit directory? Find the answer in the block rather than guessing.
 
@@ -82,7 +84,7 @@ That file is the account's identity plus the values its units read. Read a few o
 cat iac/aws/live/_envcommon/ecr-repository.hcl
 ```
 
-You met `dependency` in step 06. Read this one properly, because the interesting part is the three lines of configuration around it rather than the dependency itself.
+You met `dependency` in step 06. Read this one properly, because the interesting part is the configuration around it rather than the dependency itself.
 
 A dependency reads another unit's outputs. Before that unit has ever been applied, there are no outputs to read, so a plan would fail with nothing useful to say. `mock_outputs` supplies a stand-in. `mock_outputs_allowed_terraform_commands` limits it to plan and validate, so a real apply can never quietly use a fake value. `mock_outputs_merge_strategy_with_state` handles the case where a unit's apply failed halfway and left an empty state behind.
 
@@ -92,7 +94,7 @@ Read the comment explaining why the mock value is a self-describing string rathe
 
 ## What you have not seen
 
-The class deliberately stayed on your filesystem. Five things change when the thing on the other end is a cloud provider.
+Everything so far stayed on your filesystem. What changes when the thing on the other end is a cloud provider:
 
 **Plans take time and can be wrong about the past.** Every resource is refreshed against a live API, so a plan is slow and it can show you changes nobody made in code. That gap is called drift, and it is most of what a plan is for.
 
@@ -102,7 +104,7 @@ The class deliberately stayed on your filesystem. Five things change when the th
 
 **Nobody applies from a laptop.** A pull request runs a plan in CI. Merging is the approval, and the merge triggers the apply. The permission sets are arranged so that most people can run a plan and cannot write state, which enforces it rather than relying on everyone remembering.
 
-**Everything is written to be published.** The rules you read in step 00 come from this repository, and they are why the bucket module takes a prefix and lets AWS generate the real name, and why access bindings live in an encrypted file.
+**Everything is written to be published.** The rules in [the top-level README](../README.md) come from this repository, and they are why the bucket module takes a prefix and lets AWS generate the real name, and why access bindings live in an encrypted file.
 
 ## Where to go next
 

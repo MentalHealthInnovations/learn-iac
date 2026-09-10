@@ -1,12 +1,10 @@
 # 00. Setup
 
-Do this before the session, on the machine you are bringing. About fifteen minutes.
-
 Everything here is checked by a command that prints something. If a command prints nothing or prints an error, stop there and say so, rather than moving on.
 
 ## 1. Install mise
 
-We pin every tool with [mise](https://mise.jdx.dev), so that everyone in the room runs the same versions.
+We pin every tool with [mise](https://mise.jdx.dev), so that everyone runs the same versions.
 
 ```
 brew install mise
@@ -37,11 +35,14 @@ mise will not read a config file it has not been told to trust:
 ```
 mise trust
 mise install
+mkdir -p ~/.terraform.d/plugin-cache
 ```
 
 That installs Terraform, OpenTofu, Terragrunt and pre-commit at the versions in [mise.toml](../mise.toml). The first run downloads a few hundred megabytes.
 
-## 3a. Install the commit hooks
+The last line creates the shared provider download cache that [mise.toml](../mise.toml) points `TF_PLUGIN_CACHE_DIR` at. Every step downloads providers into that one directory rather than its own, which makes each `init` after the first one quick. OpenTofu will not create the directory itself ([OpenTofu CLI configuration docs](https://opentofu.org/docs/cli/config/config-file/)), so it has to exist before the first `init`.
+
+## 4. Install the commit hooks
 
 ```
 pre-commit install
@@ -61,56 +62,27 @@ pre-commit run --all-files
 
 The first run downloads each hook's own environment and is slow. Later runs are quick.
 
-## 4. Create the provider cache
+## 5. Take a branch
+
+You work on your own branch throughout and raise a pull request from it at the end.
 
 ```
-mkdir -p ~/.terraform.d/plugin-cache
-```
-
-Every step downloads providers into this one directory rather than its own, which makes each `init` after the first one quick.
-
-## 5. Check the tools
-
-```
-terraform version
-tofu version
-terragrunt --version
-```
-
-Expect Terraform 1.5.7, OpenTofu 1.12.x and Terragrunt 1.1.3. A different version means mise is not active in this shell, so go back to step 1.
-
-Nothing in this class needs a cloud account, credentials, or a network connection beyond downloading the tools and two small plugins. If the commands above worked, you are ready.
-
-## 6. Take a branch
-
-You work on your own branch for the whole class and raise a pull request from it at the end.
-
-```
-git switch -c session/your-name
+WORKSPACE=your-name
+git switch -c learn/$WORKSPACE
 ```
 
 Use your actual name, in lower case, with a hyphen between words.
 
-## 7. Make your own working directory
+## 6. Make your own working directory
 
-Everyone in the class works in a directory of their own, so that a dozen pull requests can be merged without any of them touching the same file.
-
-```
-mkdir -p students/your-name
-```
-
-Same name as your branch. Every step from here on works inside `students/your-name/`, and the paths in each step assume it.
-
-## 8. Know where the answers are
-
-`reference/` holds a finished copy of every step. If a step defeats you, copy it across and carry on:
+Everyone works in a directory of their own, so that a dozen pull requests can be merged without any of them touching the same file.
 
 ```
-cp -r ~/learn-iac/reference/01-local ~/learn-iac/students/your-name/
+mkdir -p workspaces/$WORKSPACE
 ```
 
-Reach for that rather than falling behind, and come back to the step afterwards. Nobody is marking this.
+Every step from here on works inside `workspaces/$WORKSPACE/`, and each one opens by setting `WORKSPACE` again so that it stands on its own in a fresh terminal.
 
 ## Done
 
-Move on to [01-local](../01-local/) when the session starts.
+Move on to [01-local](../01-local/).

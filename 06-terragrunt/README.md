@@ -1,23 +1,17 @@
 # 06. Terragrunt
 
-Step 05 left you with three directories that were nearly identical, three commands to run in the right order by hand, and no way to change the pattern everywhere at once. This step rebuilds the same three environments with none of that, and adds a fourth unit that depends on the other three.
+Step 05 left you with three directories that were nearly identical, three commands to run in the right order by hand, and no way to change the pattern everywhere at once. This step converts those same three directories so that none of that is true, and adds a fourth unit that depends on the other three.
 
 Terragrunt is a thin wrapper. It is not a fork of OpenTofu and it does not replace the language. It generates files into a working copy of your configuration and then runs `tofu` against that copy. Everything you have learned still applies underneath.
 
 ```
-mkdir -p ~/learn-iac/students/your-name/06-terragrunt
-cd ~/learn-iac/students/your-name/06-terragrunt
+WORKSPACE=your-name
+cd ~/learn-iac/workspaces/$WORKSPACE
 ```
 
-## 1. One shared module, as before
+## 1. Write the shared configuration once
 
-```
-cp -r ../05-environments/modules .
-```
-
-## 2. Write the shared configuration once
-
-Create `root.hcl` at the top of `06-terragrunt`:
+Create `root.hcl` at the top of your workspace:
 
 ```hcl
 remote_state {
@@ -40,9 +34,15 @@ inputs = {
 
 This is the answer to the problem step 05 ended on. A backend block accepts no variables, so it cannot be written once and parameterised. Terragrunt sidesteps that by writing the block itself, per unit, with the values filled in.
 
-`path_relative_to_include()` returns where the unit sits relative to this file, so `dev` gets `state/dev/terraform.tfstate` and nothing has to be spelled out per environment. In our infrastructure repository the same block says `backend = "s3"` and computes a bucket and key the same way. Step 07 shows it.
+`path_relative_to_include()` returns where the unit sits relative to this file, so `dev` gets `state/dev/terraform.tfstate` and nothing has to be spelled out per environment. In our infrastructure repository the same block says `backend = "s3"` and computes a bucket and key the same way. [Step 07](../07-mhi-infra/) shows it.
 
-## 3. Replace each environment with four lines
+## 2. Replace each environment with four lines
+
+Out with the duplication:
+
+```
+rm dev/main.tf staging/main.tf prod/main.tf
+```
 
 Create `dev/terragrunt.hcl`:
 
@@ -72,9 +72,9 @@ inputs = {
 }
 ```
 
-Compare that against `../05-environments/prod/main.tf`. The same three values, and nothing else.
+Compare that against the file you just deleted, which is kept at [reference/05-environments/prod/main.tf](../reference/05-environments/prod/main.tf). The same three values, and nothing else.
 
-## 4. Apply one, and go looking for the generated file
+## 3. Apply one, and go looking for the generated file
 
 ```
 cd dev
@@ -93,7 +93,7 @@ It is several directories down inside `.terragrunt-cache`. Terragrunt copies the
 
 Read the path in the generated block. It points at `state/dev/terraform.tfstate`, outside the cache, which is what stops your state being thrown away when the cache is cleared.
 
-## 5. A unit that depends on the others
+## 4. A unit that depends on the others
 
 Create `summary/terragrunt.hcl`:
 
@@ -129,11 +129,15 @@ inputs = {
 }
 ```
 
-The module it points at is at `reference/06-terragrunt/modules/summary`, or write your own: it takes `pet_names` and `output_dir` and writes one file listing them.
+That points at a module you do not have yet. Copy it, or write your own that takes `pet_names` and `output_dir` and writes one file listing them:
+
+```
+cp -r ~/learn-iac/reference/06-terragrunt/modules/summary modules/
+```
 
 A `dependency` does two things at once. It reads another unit's outputs, and it declares an ordering. Nowhere do you write down that the environments come before the summary.
 
-## 6. Why the mocks are there
+## 5. Why the mocks are there
 
 You have applied `dev` and not the other two. Plan the summary:
 
@@ -151,9 +155,9 @@ Without the mocks this would fail. A unit that has never been applied has no out
 
 The mock values are deliberately obvious rather than plausible. They appear in a plan someone has to review, so they need to be recognisable there and not just in this file.
 
-## 7. Run everything
+## 6. Run everything
 
-From the top of `06-terragrunt`:
+From the top of your workspace:
 
 ```
 terragrunt run --all apply
@@ -180,17 +184,17 @@ cat generated/summary.txt
 ls state
 ```
 
-## 8. What changed and what did not
+## 7. What changed and what did not
 
 Gone: the duplicated provider block, the duplicated module call, the per-directory `main.tf`, the hand-written backend configuration, and running one command per environment in an order you had to know.
 
 Unchanged, deliberately: each environment still has its own state file, in `state/dev`, `state/staging` and `state/prod`. That was the whole reason step 05 used separate directories, and none of this gives it away. `run --all` runs several units, and each one is still its own `tofu` run against its own state.
 
-## 9. Tidy up
+## 8. Tidy up
 
 ```
 terragrunt run --all destroy
-git add ~/learn-iac/students/your-name/06-terragrunt
+git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 06: terragrunt"
 ```
 

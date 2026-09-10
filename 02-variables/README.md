@@ -2,21 +2,14 @@
 
 Step 01 had every value written into the middle of the resource. That configuration can only ever produce one thing. This step pulls the values out to the edge, so the same code can produce different results, and then makes it produce several at once.
 
-Still no cloud account. Still the `random` and `local` providers.
+You are editing the same files you wrote in step 01.
 
 ```
-mkdir -p ~/learn-iac/students/your-name/02-variables
-cd ~/learn-iac/students/your-name/02-variables
+WORKSPACE=your-name
+cd ~/learn-iac/workspaces/$WORKSPACE
 ```
 
-## 1. Start from step 01
-
-```
-cp ../01-local/main.tf .
-terraform init
-```
-
-## 2. Declare some variables
+## 1. Declare some variables
 
 Create `variables.tf`:
 
@@ -43,7 +36,7 @@ The file name does not matter. Terraform reads every `.tf` file in the directory
 
 A `description` is not decoration. It is what appears when someone runs `terraform plan` and gets prompted for a value they did not supply.
 
-Now use them. In `main.tf`, replace `length = 2` with `length = var.pet_length`, and change the file content to:
+Now use them. In `main.tf`, replace `length = 3` with `length = var.pet_length`, and change the file content to:
 
 ```hcl
   content = "${var.greeting} from ${random_pet.server.id}\n"
@@ -53,27 +46,40 @@ Now use them. In `main.tf`, replace `length = 2` with `length = var.pet_length`,
 terraform plan
 ```
 
-Nothing has changed yet, because the defaults match what was hardcoded.
+Step 01 ended with `destroy`, so this plans both resources from nothing. What has changed is where the values come from, not what gets built: `var.pet_length` defaults to 2 and `var.greeting` to "Hello", which is what the resource said outright before.
 
-## 3. Supply a different value
+## 2. Set them from a file
 
-There is more than one way to set a variable, and they do not all carry the same weight. Try each in turn and watch the plan change.
+Create `terraform.tfvars`:
+
+```hcl
+pet_length = 3
+greeting   = "Good morning"
+```
 
 ```
-terraform plan -var pet_length=4
-TF_VAR_pet_length=1 terraform plan
-```
-
-The usual way is a file. Copy the example:
-
-```
-cp terraform.tfvars.example terraform.tfvars
 terraform plan
 ```
 
-`terraform.tfvars` is picked up automatically. It is ignored by git in this repository, because a variables file is where credentials end up when nobody is paying attention, and the `.example` alongside it is the committed record of what the file should contain.
+`terraform.tfvars` is picked up automatically, with no flag naming it. It is also ignored by git in this repository, because a variables file is where credentials end up when nobody is paying attention. The convention that goes with that is committing a `terraform.tfvars.example` alongside it, so the next person can see which variables the file is expected to set without the values being in the repository. There is one in [reference/02-variables](../reference/02-variables/).
 
-When the same variable is set in more than one place, the order that wins is: a `-var` flag on the command line, then a `.tfvars` file, then a `TF_VAR_` environment variable, then the default. Check that against what you just saw.
+## 3. A local is not a variable
+
+Add a `locals` block near the top of `main.tf`:
+
+```hcl
+locals {
+  output_dir = "${path.module}/generated"
+}
+```
+
+Then use it, replacing the hardcoded path in the `local_file` resource:
+
+```hcl
+  filename = "${local.output_dir}/hello.txt"
+```
+
+A local is a value computed once inside the configuration and reused. A variable is an input from outside it. The test for which you want: could a caller reasonably need to change it? If not, make it a local, so it does not appear in the interface that other people have to read.
 
 ## 4. Make several things at once
 
@@ -87,7 +93,7 @@ variable "environments" {
 }
 ```
 
-And change the `local_file` resource in `main.tf` to:
+And change the `local_file` resource to:
 
 ```hcl
 resource "local_file" "greeting" {
@@ -97,16 +103,6 @@ resource "local_file" "greeting" {
   content  = "${var.greeting} from ${random_pet.server.id}, running in ${each.key}\n"
 }
 ```
-
-`local.output_dir` does not exist yet. Add a `locals` block near the top of `main.tf`:
-
-```hcl
-locals {
-  output_dir = "${path.module}/generated"
-}
-```
-
-A local is a value computed once and reused. A variable is an input from outside. The test for which you want: could a caller reasonably need to change it? If not, make it a local.
 
 ```
 terraform plan
@@ -140,19 +136,20 @@ terraform output
 terraform output -raw pet_name
 ```
 
-Outputs are how one piece of infrastructure hands a value to a person, a script, or another configuration. The last of those matters from step 06 onwards, when a module needs to tell its caller what it built.
+Outputs are how one piece of infrastructure hands a value to a person, a script, or another configuration. The last of those matters from [step 04](../04-modules/) onwards, when a module needs to tell its caller what it built.
 
-## 6. Tidy, destroy, commit
+## 6. Tidy and commit
 
 ```
 terraform fmt
 terraform validate
-terraform destroy
-git add ~/learn-iac/students/your-name/02-variables
+git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 02: variables, outputs and for_each"
 ```
 
 `terraform.tfvars` will not be committed. That is deliberate. Check with `git status` that only the files you meant to add went in.
+
+Leave this applied. Step 03 needs the state you have just built, so do not run `destroy` at the end of this one.
 
 ## If you have time
 

@@ -2,6 +2,11 @@
 
 You have been committing at the end of every step. This one gets that work reviewed, which is the part that matters and the part nobody practises.
 
+```
+WORKSPACE=your-name
+cd ~/learn-iac
+```
+
 ## 1. Look at what you have
 
 ```
@@ -9,7 +14,7 @@ git log --oneline
 git diff main...HEAD --stat
 ```
 
-Seven or eight commits, one per step. That is why each step ended with a commit rather than saving it all for the end: the reviewer reads a sequence they can follow, not one lump.
+One commit per step, and a diff that shows the same directory being built up and refactored rather than copied. That is why each step ended with a commit: the reviewer reads a sequence they can follow, not one lump.
 
 The three dots in `main...HEAD` mean "everything on my branch that is not on main", which is exactly what a pull request contains. Two dots would mean something different and is a common source of confusion.
 
@@ -23,9 +28,9 @@ git push -u origin HEAD
 
 ## 3. Write the description
 
-The base branch is `main`. Everything you have added lives under `students/your-name/`, so your pull request touches no file anyone else's touches and can be merged without waiting for theirs.
+The base branch is `main`. Everything you have added lives under `workspaces/$WORKSPACE/`, so your pull request touches no file anyone else's touches and can be merged without waiting for theirs.
 
-Title it the way the commits are titled: `type: description`, so `docs: worked through the class` or similar.
+Title it the way the commits are titled: `type: description`, so `docs: worked through the course` or similar.
 
 For the body, three things are worth more than a summary of what you did, which the reviewer can see in the diff:
 
@@ -46,8 +51,9 @@ Reply to the ones you disagree with rather than silently changing the code. A re
 Make the change, then:
 
 ```
-git add <the file>
-git commit -m "fix: address review comment on <whatever>"
+FILE=path/to/the/file/you/changed
+git add $FILE
+git commit -m "fix: address review comment on $FILE"
 git push
 ```
 
@@ -70,7 +76,7 @@ Once your pull request is approved, merge it. Then, because the branch has serve
 ```
 git switch main
 git pull
-git branch -d session/your-name
+git branch -d learn/$WORKSPACE
 ```
 
 ## If you have time
