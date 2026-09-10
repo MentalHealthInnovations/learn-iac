@@ -1,8 +1,8 @@
 # 06. Terragrunt
 
-Step 05 left you with three directories that were nearly identical, three commands to run in the right order by hand, and no way to change the pattern everywhere at once. This step converts those same three directories so that none of that is true, and adds a fourth unit that depends on the other three.
+Step 05 left three nearly identical directories, three commands to run in the right order by hand, and no way to change the pattern everywhere at once. This step converts those directories so none of that holds, and adds a fourth unit that depends on the other three.
 
-Terragrunt is a thin wrapper. It is not a fork of OpenTofu and it does not replace the language. It generates files into a working copy of your configuration and then runs `tofu` against that copy. Everything you have learned still applies underneath.
+Terragrunt is a thin wrapper, not a fork of OpenTofu, and it does not replace the language. It generates files into a working copy of your configuration and runs `tofu` against that copy. Everything you have learned still applies underneath.
 
 ```
 WORKSPACE=your-name
@@ -32,9 +32,9 @@ inputs = {
 }
 ```
 
-This is the answer to the problem step 05 ended on. A backend block accepts no variables, so it cannot be written once and parameterised. Terragrunt sidesteps that by writing the block itself, per unit, with the values filled in.
+This answers the problem step 05 ended on. A backend block accepts no variables, so it cannot be written once and parameterised. Terragrunt writes the block itself, per unit, with the values filled in.
 
-`path_relative_to_include()` returns where the unit sits relative to this file, so `dev` gets `state/dev/terraform.tfstate` and nothing has to be spelled out per environment. In our infrastructure repository the same block says `backend = "s3"` and computes a bucket and key the same way. [Step 07](07-mhi-infra.md) shows it.
+`path_relative_to_include()` returns where the unit sits relative to this file, so `dev` gets `state/dev/terraform.tfstate` and nothing has to be spelled out per environment. In the MHI infrastructure repository the same block says `backend = "s3"` and computes a bucket and key the same way. [Step 07](07-mhi-infra.md) shows it.
 
 ## 2. Replace each environment with four lines
 
@@ -60,7 +60,7 @@ inputs = {
 }
 ```
 
-There is no `main.tf`. There is no `required_providers` block, no `module` block, no `output` block. `source` says which module this unit is an instance of, and `inputs` says what makes it different from the other instances. That is the entire environment.
+No `main.tf`, no `required_providers` block, no `module` block, no `output` block. `source` says which module this unit is an instance of, `inputs` says what makes it different from the others. That is the entire environment.
 
 Now `staging/terragrunt.hcl`, identical but `environment = "staging"`, and `prod/terragrunt.hcl`:
 
@@ -149,11 +149,11 @@ cd ..
 
 The plan shows dev's real pet name alongside `MOCK-staging-not-yet-applied` and `MOCK-prod-not-yet-applied`, with a warning naming each unit that had no outputs to give.
 
-Without the mocks this would fail. A unit that has never been applied has no outputs, so a plan that reads them has nothing to read, and you would be unable to plan anything until you had already applied everything it depends on. That is a deadlock in CI, where the plan is what gates the apply.
+Without the mocks this would fail. A unit that has never been applied has no outputs, so you could not plan anything until you had already applied everything it depends on. That is a deadlock in CI, where the plan gates the apply.
 
-`mock_outputs_allowed_terraform_commands` is why a fake value can never reach an apply. Take it out and the mock is substituted on every command, including one that builds something real.
+`mock_outputs_allowed_terraform_commands` keeps a fake value out of an apply. Take it out and the mock is substituted on every command, including one that builds something real.
 
-The mock values are deliberately obvious rather than plausible. They appear in a plan someone has to review, so they need to be recognisable there and not just in this file.
+The mock values are deliberately obvious rather than plausible, because they appear in a plan someone has to review.
 
 ## 6. Run everything
 
@@ -175,9 +175,9 @@ Read what it prints before the work starts. It draws the graph it worked out:
     ╰── summary
 ```
 
-The three environments run at the same time, and the summary waits for all of them. One command, in place of step 05's three in a fixed order that you had to remember.
+The three environments run at the same time, and the summary waits for all of them. One command, in place of step 05's three in a fixed order.
 
-If a unit fails with `unable to acquire file lock ... resource deadlock avoided`, that is several units downloading the same provider at once on a cold cache. Run the command again. The second run has the providers already and goes through.
+If a unit fails with `unable to acquire file lock ... resource deadlock avoided`, several units are downloading the same provider at once on a cold cache. Run the command again.
 
 ```
 cat generated/summary.txt
@@ -188,7 +188,7 @@ ls state
 
 Gone: the duplicated provider block, the duplicated module call, the per-directory `main.tf`, the hand-written backend configuration, and running one command per environment in an order you had to know.
 
-Unchanged, deliberately: each environment still has its own state file, in `state/dev`, `state/staging` and `state/prod`. That was the whole reason step 05 used separate directories, and none of this gives it away. `run --all` runs several units, and each one is still its own `tofu` run against its own state.
+Unchanged, deliberately: each environment still has its own state file, in `state/dev`, `state/staging` and `state/prod`. `run --all` runs several units, and each is still its own `tofu` run against its own state.
 
 ## 8. Tidy up
 

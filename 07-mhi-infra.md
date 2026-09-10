@@ -1,6 +1,6 @@
 # 07. The real thing
 
-Everything you have built so far writes text files. This step opens the repository that runs our AWS estate and shows you that it is the same three ideas at a larger size, plus a handful you have not met.
+Everything so far writes text files. This step opens the repository that runs the MHI AWS estate, which is the same ideas at a larger size plus a handful you have not met.
 
 Nothing here is applied, planned, or destroyed. You read.
 
@@ -32,9 +32,9 @@ ls iac/aws/modules/s3-bucket
 cat iac/aws/modules/s3-bucket/variables.tf
 ```
 
-Four familiar files, `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`, and two you have not seen. `tests/` holds `.tftest.hcl` files, which are not optional for a module here. `README.md` is generated from the variable descriptions rather than written, which is why writing a good `description` is worth the effort.
+Four familiar files, `main.tf`, `variables.tf`, `outputs.tf`, `versions.tf`, and two you have not seen. `tests/` holds `.tftest.hcl` files, not optional for a module here. `README.md` is generated from the variable descriptions rather than written, which is why a good `description` is worth the effort.
 
-Read the description on `kms_key_arn`. Notice that it does not say what the variable is, which is obvious, but what happens if you leave it null and why that is sometimes the right choice. That is the standard to aim for.
+Read the description on `kms_key_arn`. It does not say what the variable is, which is obvious, but what happens if you leave it null and why that is sometimes the right choice. That is the standard to aim for.
 
 **Question:** find the argument in this module that exists so a bucket can be deleted while objects remain. Why would you want that off in production?
 
@@ -44,11 +44,9 @@ Read the description on `kms_key_arn`. Notice that it does not say what the vari
 cat iac/aws/live/shared-services/ecr-nginx/terragrunt.hcl
 ```
 
-This is a `terragrunt.hcl` like the ones you wrote in step 06. It includes a root config, includes a shared partial, and supplies `inputs`. Two things are new.
+A `terragrunt.hcl` like the ones you wrote in step 06. It includes a root config, includes a shared partial, and supplies `inputs`. What is new is `exclude`, which stops the unit deploying to some accounts: this one runs in `shared-services-dev` and nowhere else.
 
-`exclude` stops the unit deploying to some accounts. This one runs in `shared-services-dev` and nowhere else.
-
-The comments carry the reasoning. Read the paragraph explaining why the repository exists at all, about private subnets having no route to a public registry. That is the house style: the file says what it does, and the comment says why anyone would want it.
+The comments carry the reasoning. Read the paragraph on private subnets having no route to a public registry. That is the house style: the file says what it does, the comment says why anyone would want it.
 
 ## Stop 4: the root, and what you never have to write again
 
@@ -57,7 +55,7 @@ grep -n 'generate "' iac/root.hcl
 grep -n 'remote_state' iac/root.hcl
 ```
 
-In step 04 you wrote a `required_providers` block in your root module, and in step 06 Terragrunt generated one for you. Here the same mechanism supplies three things to every unit in the repository: the provider configuration, the backend configuration, and the client-side state encryption block that step 03 said was the reason we run OpenTofu.
+In step 04 you wrote a `required_providers` block in your root module, and in step 06 Terragrunt generated one for you. Here the same mechanism supplies three things to every unit in the repository: the provider configuration, the backend configuration, and the client-side state encryption block that step 03 said was the reason for running OpenTofu.
 
 Look at the `remote_state` block. It is the shape you used in step 06, with `backend = "s3"` instead of `backend = "local"`, and the bucket and key computed from where the unit sits in the tree. Every unit in the repository, one definition.
 
@@ -78,7 +76,7 @@ The units are listed once. The `vars/` directory holds one file per account, and
 head -40 iac/aws/live/shared-services/vars/shared-services-dev.hcl
 ```
 
-That file is the account's identity plus the values its units read. Read a few of the comments. Several of them explain a cost or a failure mode rather than a setting, which is the point: the file records the decisions, and the decisions are the part nobody remembers a year later.
+That file is the account's identity plus the values its units read. Read a few of the comments. Several explain a cost or a failure mode rather than a setting, because the decisions are the part nobody remembers a year later.
 
 ## Stop 6: units that need each other
 
@@ -86,9 +84,9 @@ That file is the account's identity plus the values its units read. Read a few o
 cat iac/aws/live/_envcommon/ecr-repository.hcl
 ```
 
-You met `dependency` in step 06. Read this one properly, because the interesting part is the configuration around it rather than the dependency itself.
+You met `dependency` in step 06. The interesting part is the configuration around it rather than the dependency.
 
-A dependency reads another unit's outputs. Before that unit has ever been applied, there are no outputs to read, so a plan would fail with nothing useful to say. `mock_outputs` supplies a stand-in. `mock_outputs_allowed_terraform_commands` limits it to plan and validate, so a real apply can never quietly use a fake value. `mock_outputs_merge_strategy_with_state` handles the case where a unit's apply failed halfway and left an empty state behind.
+A dependency reads another unit's outputs, and before that unit has been applied there are none, so a plan would fail with nothing useful to say. `mock_outputs` supplies a stand-in. `mock_outputs_allowed_terraform_commands` limits it to plan and validate, so a real apply can never quietly use a fake value. `mock_outputs_merge_strategy_with_state` handles a unit whose apply failed halfway and left an empty state behind.
 
 Read the comment explaining why the mock value is a self-describing string rather than a plausible-looking ARN.
 
@@ -104,7 +102,7 @@ Everything so far stayed on your filesystem. What changes when the target is a c
 
 **Secrets exist.** Some values a unit needs cannot be committed and cannot be invented at runtime. Those are encrypted with SOPS, committed as ciphertext, reviewed in a pull request, and decrypted at plan time by whoever holds the key. Look at `docs/how-to/manage-a-secret.md`.
 
-**Nobody applies from a laptop.** A pull request runs a plan in CI. Merging is the approval, and the merge triggers the apply. The permission sets are arranged so that most people can run a plan and cannot write state, which enforces it rather than relying on everyone remembering.
+**Nobody applies from a laptop.** A pull request runs a plan in CI. Merging is the approval, and the merge triggers the apply. Permission sets are arranged so that most people can run a plan and cannot write state, rather than relying on everyone remembering.
 
 **Everything is written to be published.** The rules in [the top-level README](README.md) come from this repository, and they are why the bucket module takes a prefix and lets AWS generate the real name, and why access bindings live in an encrypted file.
 
@@ -116,6 +114,6 @@ ls docs/adr
 ls docs/how-to
 ```
 
-The architecture decision records are the useful reading. Each one is a decision that was contested, with the reasoning and the cost of the alternative. `docs/how-to/` is the recipe collection for when you have a job to do.
+The architecture decision records are the useful reading. Each is a decision that was contested, with the reasoning and the cost of the alternative. `docs/how-to/` is the recipe collection for when you have a job to do.
 
-If you want to run something for real, the smallest useful task is reading a plan on an open pull request and saying what you think it does.
+To run something for real, the smallest useful task is reading a plan on an open pull request and saying what you think it does.

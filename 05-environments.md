@@ -1,31 +1,31 @@
 # 05. Three environments, the hard way
 
-This step is deliberately tedious. You will build the same thing three times, by copying it, and by the end you should be irritated. Step 06 removes the irritation. Doing it in that order matters, because Terragrunt looks like unnecessary machinery until you have felt what it takes away.
+This step is deliberately tedious. You build the same thing three times, by copying it, and by the end you should be irritated. Step 06 removes the irritation, and Terragrunt looks like unnecessary machinery until you have felt what it takes away.
 
 ```
 WORKSPACE=your-name
 cd ~/learn-iac/workspaces/$WORKSPACE
 ```
 
-## 1. First, the question from step 04
+## 1. The question from step 04
 
-A `module` block takes `for_each`. So the obvious way to build three environments is one directory, one module block, a set of three names. Why not do that?
+A `module` block takes `for_each`, so the obvious way to build three environments is one directory, one module block, a set of three names. Why not?
 
-Because it puts all three environments in one state file, and one state file is one blast radius. With `for_each`, you cannot plan dev without also refreshing prod, you cannot apply dev without prod being in the same run, and a mistake in a shared input shows up as a change to all three at once. The thing you most want, that a bad afternoon in dev cannot reach production, is exactly what a shared state file gives away.
+Because it puts all three environments in one state file, and one state file is one blast radius. With `for_each` you cannot plan dev without refreshing prod, you cannot apply dev without prod in the same run, and a mistake in a shared input changes all three at once. A bad afternoon in dev reaching production is what a shared state file buys you.
 
-So environments get separate state. Separate state means separate directories, one `tofu` run each. That is the constraint everything below follows from, and it is why the tedium is not bad design.
+So environments get separate state, which means separate directories and one `tofu` run each. Everything below follows from that constraint.
 
-`for_each` over a module is still the right answer within one environment, for three of the same thing that live and die together. It is the wrong answer across environments.
+`for_each` over a module is still right within one environment, for three of the same thing that live and die together. It is wrong across environments.
 
 ## 2. Clear the root
 
-Your root calls the module twice. Three environments cannot live in one root, so the root stops being a place where anything runs:
+Three environments cannot live in one root, so the root stops being a place where anything runs:
 
 ```
 rm main.tf outputs.tf
 ```
 
-`modules/greeting` stays exactly where it is. One copy of the pattern, shared by all three environments.
+`modules/greeting` stays where it is, one copy shared by all three environments.
 
 ## 3. Build dev
 
@@ -79,7 +79,7 @@ rm -rf staging/.terraform staging/terraform.tfstate* staging/generated
 rm -rf prod/.terraform prod/terraform.tfstate* prod/generated
 ```
 
-The removals matter. Copying a directory that has been applied copies its state with it, and a state file that thinks it already owns dev's resources will not build staging's. This is the first hint that state is per-directory and travels with the files, whether you meant it to or not.
+The removals matter. Copying a directory that has been applied copies its state with it, and a state file that thinks it already owns dev's resources will not build staging's. State is per-directory and travels with the files, whether you meant it to or not.
 
 Now edit `staging/main.tf`, changing `environment` to `"staging"`. Then `prod/main.tf`, changing `environment` to `"prod"`, `greeting` to `"Good morning"` and `pet_length` to `3`.
 
@@ -99,9 +99,9 @@ diff dev/main.tf staging/main.tf
 diff dev/main.tf prod/main.tf
 ```
 
-The `required_providers` block is identical in all three and has nothing to do with any environment. The `module` block is identical apart from the values. The `output` block is identical. Between dev and staging, one word differs out of roughly twenty-five lines.
+The `required_providers` block is identical in all three and has nothing to do with any environment. The `module` block is identical apart from the values, and the `output` block is identical. Between dev and staging, one word differs.
 
-Now imagine the real version. Ten units instead of one, so thirty directories. A provider block that also pins a region, a role to assume, and a default set of tags. A backend configuration naming a bucket and a key that must be different in every one of the thirty, and which cannot be computed, because a backend block accepts no variables at all.
+Now the real version. Ten units instead of one, so thirty directories. A provider block pinning a region, a role to assume and a default set of tags. A backend configuration naming a bucket and key that differ in every one of the thirty, and which cannot be computed, because a backend block accepts no variables.
 
 ## 6. Feel the second problem
 
@@ -129,12 +129,10 @@ git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 05: three environments by copy and paste"
 ```
 
-Leave the directories in place. Step 06 rebuilds this same layout without the duplication.
+Leave the directories in place. Step 06 rebuilds this layout without the duplication.
 
 ## What to carry into step 06
 
-Three problems, in the order Terragrunt solves them.
+Three problems, in the order Terragrunt solves them. Configuration that is identical everywhere gets written once and generated into each directory. Values that differ per environment get declared where the environment is declared. Running the same command across every directory becomes one command that also understands the ordering.
 
-Configuration that is identical everywhere gets written once and generated into each directory. Values that differ per environment get declared where the environment is declared. Running the same command across every directory becomes one command that also understands the ordering.
-
-Nothing about separate state changes. Each environment keeps its own, which was the point of the separate directories in the first place.
+Separate state does not change. Each environment keeps its own, which was the point of the separate directories.

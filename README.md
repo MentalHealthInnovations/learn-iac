@@ -18,7 +18,7 @@ Work through [00-setup](00-setup.md) first. It installs the tools and gives you 
 | --- | --- | --- |
 | [01-local](01-local.md) | A random name and a text file on your disk | `init`, `plan`, `apply`, `destroy`, and what state is |
 | [02-variables](02-variables.md) | The same thing, parameterised, three files instead of one | Variables, outputs, locals, `for_each` |
-| [03-tofu](03-tofu.md) | Nothing new | Why we run OpenTofu, and moving a state file across |
+| [03-tofu](03-tofu.md) | Nothing new | Why OpenTofu, and moving a state file across |
 | [04-modules](04-modules.md) | The same resources, extracted into a module and called twice | Modules, inputs, outputs, composition |
 | [05-environments](05-environments.md) | Dev, staging and prod, by copy and paste | The duplication problem, felt rather than described |
 | [06-terragrunt](06-terragrunt.md) | The same three, without the copy and paste | `terragrunt.hcl`, generated blocks, dependencies, `run --all` |
@@ -40,19 +40,17 @@ Come back to the step afterwards.
 
 ## This repository is public
 
-Everything you write here, including your branch, your pull request and your commit messages, is readable by anyone. That is deliberate, and it is worth understanding before you type your first commit, because it is also true of the repository that runs our AWS estate.
+Everything you write here, including your branch, your pull request and your commit messages, is readable by anyone.
 
-Two reasons for it. The first is that the discipline is the point: "could this be public?" is a sharper test than "is this tidy enough", and it is harder to let slip under pressure than a self-imposed rule. The second is that other charities get to read a real infrastructure repository rather than a sanitised template, and the working code is the hard part to get right. Both come from ADR-0005 in the infrastructure repository (`docs/adr/0005-open-source-the-repo.md`), which reached the same decision for the same reasons.
+"Could this be public?" is a stronger test than "is this tidy enough", and it is harder to let slip. This also lets other charities read a real infrastructure repository rather than a sanitised template.
 
-Never commit, here or there:
+Never commit:
 
 - Secrets of any kind. Keys, tokens, passwords, certificates, connection strings with credentials in them.
 - Service-user data. For a mental health organisation this is the absolute line.
 - Staff personal-life data. Personal email addresses, home addresses, HR records.
 - Internal references. Ticket keys, internal-only URLs, the names of internal tools and chat channels.
 - Real production bucket names, host names, and private addresses.
-
-Fine to commit: AWS account numbers, which AWS documents as identifying rather than secret, and staff work email addresses.
 
 A secret that a running system needs is supplied at the point it runs, from an identity the machine already holds or from a secret store it can read, so that the value never exists in a file at all. [Step 07](07-mhi-infra.md) shows what that looks like in practice.
 

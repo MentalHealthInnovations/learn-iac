@@ -1,6 +1,6 @@
 # 08. Raise a pull request
 
-You have been committing at the end of every step. This one gets that work reviewed, which is the part that matters and the part nobody practises.
+You have been committing at the end of every step. This one gets that work reviewed.
 
 ```
 WORKSPACE=your-name
@@ -14,31 +14,31 @@ git log --oneline
 git diff main...HEAD --stat
 ```
 
-One commit per step, and a diff that shows the same directory being built up and refactored rather than copied. That is why each step ended with a commit: the reviewer reads a sequence they can follow, not one lump.
+One commit per step, and a diff showing one directory built up and refactored rather than copied. The reviewer reads a sequence they can follow, not one lump.
 
-The three dots in `main...HEAD` mean "everything on my branch that is not on main", which is exactly what a pull request contains. Two dots would mean something different and is a common source of confusion.
+The three dots in `main...HEAD` mean "everything on my branch that is not on main", which is what a pull request contains. Two dots mean something different and are a common source of confusion.
 
 ## 2. Push your branch
 
-You cloned over HTTPS, which needs no SSH key but does need GitHub credentials before it will accept a push. The GitHub CLI is the shortest way to arrange that:
+Cloning over HTTPS needs no SSH key, but pushing needs GitHub credentials. The GitHub CLI is the shortest way to arrange that:
 
 ```
 gh auth login
 ```
 
-Choose HTTPS as the protocol and answer yes when it offers to authenticate Git with your GitHub credentials, which is what stores them for later pushes ([GitHub's caching-credentials docs](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git)). Git Credential Manager does the same job if you already have it.
+Choose HTTPS as the protocol and answer yes when it offers to authenticate Git with your GitHub credentials, which stores them for later pushes ([GitHub's caching-credentials docs](https://docs.github.com/en/get-started/git-basics/caching-your-github-credentials-in-git)). Git Credential Manager does the same job.
 
 ```
 git push -u origin HEAD
 ```
 
-`-u` sets the upstream, so from now on plain `git push` knows where to go. Git prints a link to open a pull request. Follow it.
+`-u` sets the upstream, so plain `git push` knows where to go from now on. Git prints a link to open a pull request. Follow it.
 
-If the push is rejected because you have no write access, fork the repository, add your fork as a second remote, and push there instead. The pull request then comes from your fork, and everything below reads the same.
+If the push is rejected for lack of write access, fork the repository, add your fork as a second remote, and push there. The pull request then comes from your fork.
 
 ## 3. Write the description
 
-The base branch is `main`. Everything you have added lives under `workspaces/$WORKSPACE/`, so your pull request touches no file anyone else's touches and can be merged without waiting for theirs.
+The base branch is `main`. Everything you added lives under `workspaces/$WORKSPACE/`, so your pull request can be merged without waiting for anyone else's.
 
 Title it the way the commits are titled: `type: description`, so `docs: worked through the steps` or similar.
 
@@ -52,9 +52,9 @@ The third is the most valuable and the least often written. A pull request is a 
 
 ## 4. Get reviewed
 
-Your reviewer reads the diff and leaves comments on specific lines. Some will be questions, some will be suggestions, some will be wrong. All three are normal.
+Your reviewer leaves comments on specific lines. Some will be questions, some suggestions, some wrong. All three are normal.
 
-Reply to the ones you disagree with rather than silently changing the code. A review is a conversation between two people who both want the thing to work, and a reviewer who is mistaken would rather find out in the thread than after the merge.
+Reply to the ones you disagree with rather than silently changing the code. A reviewer who is mistaken would rather find out in the thread than after the merge.
 
 ## 5. Respond with a commit
 
@@ -67,21 +67,21 @@ git commit -m "fix: address review comment on $FILE"
 git push
 ```
 
-The pull request updates itself. You do not open a new one, and you do not need to do anything in the web interface. This surprises people the first time.
+The pull request updates itself. You do not open a new one, and you do not touch the web interface.
 
-If the commit hooks reject the commit, read what they say. `terraform_fmt` rewriting a file is not a failure, it is the hook doing its job: add the rewritten file and commit again.
+If the commit hooks reject the commit, read what they say. `terraform_fmt` rewriting a file is the hook doing its job: add the rewritten file and commit again.
 
 ## 6. Why this matters more for infrastructure
 
-In an ordinary code repository, a merged pull request means the code is in. In the repository you looked at in step 07, merging is the approval to change live infrastructure. Continuous integration runs a plan when the pull request opens, a person reads that plan, and merging is what triggers the apply.
+In an ordinary repository, a merged pull request means the code is in. In the repository you read in step 07, merging is the approval to change live infrastructure. CI runs a plan when the pull request opens, a person reads that plan, and merging triggers the apply.
 
-That is enforced rather than agreed. The permission sets are arranged so that most people can run a plan and cannot write state, so applying from a laptop is not something you are trusted not to do, it is something you cannot do.
+That is enforced rather than agreed. Permission sets let most people run a plan and not write state, so applying from a laptop is not something you are trusted not to do, it is something you cannot do.
 
-Which means the review you are practising here is not a formality bolted on to the end. It is the only thing standing between a plan and production.
+The review you are practising here is the only thing standing between a plan and production.
 
 ## 7. Afterwards
 
-Once your pull request is approved, merge it. Then, because the branch has served its purpose:
+Once approved, merge it. Then:
 
 ```
 git switch main

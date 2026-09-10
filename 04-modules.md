@@ -1,8 +1,8 @@
 # 04. Modules
 
-Step 02 produced three files from one resource block. That works while everything is the same shape. A module is what you reach for when you want the same *pattern* several times, with different values, and you want to change the pattern in one place.
+Step 02 produced three files from one resource block, which works while everything is the same shape. A module gives you the same *pattern* several times, with different values, changeable in one place.
 
-This step refactors what you have: the resources move out into a module, and what is left behind calls it twice. From here on the binary is `tofu`.
+This step moves your resources out into a module, and what is left behind calls it twice. From here on the binary is `tofu`.
 
 ```
 WORKSPACE=your-name
@@ -11,9 +11,9 @@ cd ~/learn-iac/workspaces/$WORKSPACE
 
 ## 1. You have already written one
 
-A module is a directory containing `.tf` files. That is the entire definition. The directory you have been working in is a module, called the root module, and the only thing that makes it special is that it is the one you ran `tofu` in.
+A module is a directory containing `.tf` files. That is the entire definition. The directory you have been working in is one, called the root module, and all that makes it special is that it is where you ran `tofu`.
 
-So nothing below is new syntax. It is the same files, in a subdirectory, called by name.
+Nothing below is new syntax. It is the same files, in a subdirectory, called by name.
 
 ## 2. Move the pattern into a module
 
@@ -178,11 +178,11 @@ tofu apply
 tofu output
 ```
 
-That looks like ceremony at this size. It is what lets one unit of infrastructure hand a value to another without either knowing the other's internals, which is how step 06 wires things together.
+Ceremony at this size, but it is what lets one unit of infrastructure hand a value to another without either knowing the other's internals, which is how step 06 wires things together.
 
 ## 7. Why not a loop
 
-A `module` block takes `for_each`, so those two calls could collapse into one block over a set of environment names. Hold that thought. Step 05 is about why environments are the one case where you usually do not do that.
+A `module` block takes `for_each`, so those two calls could collapse into one block over a set of environment names. Step 05 is about why environments are the one case where you usually do not.
 
 ## 8. Tidy up
 
@@ -194,7 +194,7 @@ git add ~/learn-iac/workspaces/$WORKSPACE
 git commit -m "step 04: modules"
 ```
 
-Look at that diff before you commit it. Resources left the root and arrived in `modules/greeting`, which is what a refactor looks like in a repository like this one.
+Look at that diff before you commit it. Resources left the root and arrived in `modules/greeting`.
 
 ## If you have time
 
