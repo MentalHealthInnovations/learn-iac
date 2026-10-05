@@ -9,7 +9,7 @@
 # 1.5.7 is the last Terraform release under the Mozilla Public Licence. Steps 01
 # and 02 use it. Step 03 covers what happened next and switches to OpenTofu for
 # everything after it.
-terraform  = "1.5.7"
+terraform  = "1.16.5"
 opentofu   = "1.12"
 terragrunt = "1.1.6"
 
